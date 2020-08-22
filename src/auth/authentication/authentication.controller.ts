@@ -11,4 +11,8 @@ export class AuthenticationController {
   async login(@Request() req) {
     return this.authService.generateToken(req.user);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('verify')
+  async verify() {}
 }
