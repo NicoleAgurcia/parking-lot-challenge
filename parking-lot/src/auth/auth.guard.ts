@@ -8,6 +8,7 @@ import {
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private httpService: HttpService) {}
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
