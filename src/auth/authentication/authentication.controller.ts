@@ -1,16 +1,15 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import {UsersService} from './users.service';
+import {AuthenticationService} from '../services/authentication/authentication.service';
 
-@Controller('users')
-export class UsersController {
-  constructor(private userService: UsersService) {}
+@Controller('auth')
+export class AuthenticationController {
+  constructor(private authService: AuthenticationService) {}
 
   validateIdentityParams(body) {
     const {username, password} = body;
@@ -22,16 +21,11 @@ export class UsersController {
     }
   }
 
-  @Get()
-  getUsers() {
-    return this.userService.getUsers();
-  }
-
   @Post()
-  addUser(@Body() body) {
+  login(@Body() body) {
     const {username, password} = body;
     this.validateIdentityParams(body);
 
-    return this.userService.createUser(username, password);
-  } 
+    return this.authService.validateUser(username, password);
+  }
 }

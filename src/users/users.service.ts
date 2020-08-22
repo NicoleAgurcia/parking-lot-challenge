@@ -26,14 +26,7 @@ export class UsersService {
     return await this.userModel.create(user);
   }
 
-  async validateUser(username: string, password: string) {
-    const user = await this.userModel.findOne({username});
-
-    const isSamePassword = await bcrypt.compare(password, user.password);
-
-    if (!user || !isSamePassword) {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
-    return user;
+  async getUserByUsername(username: string) {
+    return this.userModel.findOne({username});
   }
 }
