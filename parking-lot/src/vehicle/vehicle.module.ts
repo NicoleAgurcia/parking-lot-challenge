@@ -1,10 +1,9 @@
 import { Module, HttpModule } from '@nestjs/common';
 import { VehicleController } from './vehicle.controller';
-import { Mongoose } from 'mongoose';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Vehicle, VehicleSchema } from './schemas/vehicle.schema';
 import { VehicleService } from './vehicle.service';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [

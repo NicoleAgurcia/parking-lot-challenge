@@ -5,9 +5,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { VehicleModule } from './vehicle/vehicle.module';
 import { VehicleTypesModule } from './vehicle-types/vehicle-types.module';
 import { AuthModule } from './auth/auth.module';
+import { ParkingLotsModule } from './parking-lots/parking-lots.module';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost/parkingLot'), VehicleModule, VehicleTypesModule, AuthModule],
+  imports: [MongooseModule.forRoot('mongodb://localhost/parkingLot'), VehicleModule, VehicleTypesModule, AuthModule, ParkingLotsModule],
   controllers: [AppController],
   providers: [AppService],
 })
