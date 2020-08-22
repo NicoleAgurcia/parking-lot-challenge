@@ -1,31 +1,14 @@
-import {
-  Controller,
-  Post,
-  Body,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import {Controller, Post, UseGuards, Request} from '@nestjs/common';
 import {AuthenticationService} from '../services/authentication/authentication.service';
+import {AuthGuard} from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthenticationController {
   constructor(private authService: AuthenticationService) {}
 
-  validateIdentityParams(body) {
-    const {username, password} = body;
-    if (!username || !password) {
-      throw new HttpException(
-        'Missing password or username',
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-    }
-  }
-
+  @UseGuards(AuthGuard('local'))
   @Post()
-  login(@Body() body) {
-    const {username, password} = body;
-    this.validateIdentityParams(body);
-
-    return this.authService.validateUser(username, password);
+  async login(@Request() req) {
+    return this.authService.generateToken(req.user);
   }
 }
