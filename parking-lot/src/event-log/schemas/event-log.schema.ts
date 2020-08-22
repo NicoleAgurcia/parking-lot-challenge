@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema()
-export class ParkingLots extends Document {
+export class EventLog extends Document {
   @Prop({ required: true })
   plate: string;
 
@@ -16,4 +16,4 @@ export class ParkingLots extends Document {
   active: Boolean;
 }
 
-export const ParkingLotsSchema = SchemaFactory.createForClass(ParkingLots);
+export const EventLogSchema = SchemaFactory.createForClass(EventLog);

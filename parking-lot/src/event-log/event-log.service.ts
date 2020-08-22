@@ -1,20 +1,20 @@
 import { Injectable, Post, HttpException, HttpStatus } from '@nestjs/common';
-import { ParkingLots } from './schemas/parking-lots.schema';
+import { EventLog } from './schemas/event-log.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
-export class ParkingLotsService {
+export class EventLogService {
   constructor(
-    @InjectModel(ParkingLots.name) private parkingLotsModel: Model<ParkingLots>,
+    @InjectModel(EventLog.name) private eventLogModel: Model<EventLog>,
   ) {}
 
   async registerEntry(plate: string) {
-    let [register] = await this.parkingLotsModel
+    let [register] = await this.eventLogModel
       .find({ plate })
       .sort({ startDate: -1 });
 
-    if (!register.endDate) {
+    if (register && !register.endDate) {
       throw new HttpException(
         `Departure event is pending for vehicle plate ${plate}`,
         HttpStatus.BAD_REQUEST,
@@ -27,11 +27,11 @@ export class ParkingLotsService {
       endDate: null,
       active: true,
     };
-    return this.parkingLotsModel.create(params);
+    return this.eventLogModel.create(params);
   }
 
   async registerDeparture(plate: string) {
-    let [register] = await this.parkingLotsModel
+    let [register] = await this.eventLogModel
       .find({ plate })
       .sort({ startDate: -1 });
 
