@@ -2,11 +2,16 @@ import { Injectable, Post, HttpException, HttpStatus } from '@nestjs/common';
 import { EventLog } from './schemas/event-log.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { VehicleService } from '../vehicle/vehicle.service';
+import { VehicleTypesService } from '../vehicle-types/vehicle-types.service';
+const { convertArrayToCSV } = require('convert-array-to-csv');
 
 @Injectable()
 export class EventLogService {
   constructor(
     @InjectModel(EventLog.name) private eventLogModel: Model<EventLog>,
+    private vehicleService: VehicleService,
+    private vehicleTypesService: VehicleTypesService,
   ) {}
 
   async registerEntry(plate: string) {
@@ -53,5 +58,63 @@ export class EventLogService {
       { active: false },
     );
     return { count: nModified };
+  }
+
+  async getActiveLogs(): Promise<EventLog[]> {
+    return this.eventLogModel.find({ active: true });
+  }
+
+  async generateReport() {
+    const logs = await this.getActiveLogs();
+    const vehicleType = await this.vehicleTypesService.getVehicleTypeByDescription(
+      'Residente',
+    );
+    const residentVehicles = await this.vehicleService.getVehiclesByType(
+      vehicleType._id,
+    );
+    const residentPlates = residentVehicles.map(vehicle => vehicle.plate);
+
+    const residentDefaultInfo = residentPlates.reduce((prev, cur) => {
+      prev[cur] = { minutes: 0, fee: 0 };
+      return prev;
+    }, {});
+
+    const logsDictionary = logs.reduce((prev: any, cur: EventLog) => {
+      if (!prev[cur.plate]) {
+        return prev;
+      }
+      prev[cur.plate].fee += this.calculateFee(cur);
+      prev[cur.plate].minutes += this.calculateMinutes(cur);
+      return prev;
+    }, residentDefaultInfo);
+
+    return logsDictionary;
+  }
+
+  calculateMinutes(cur: EventLog) {
+    const delta = cur.endDate.getTime() - cur.startDate.getTime();
+    return delta / 1000 / 60;
+  }
+
+  calculateFee(cur: EventLog) {
+    if (!cur.endDate) return 0;
+    const mins = this.calculateMinutes(cur);
+
+    return mins * 0.05;
+  }
+
+  csvReport(report: any) {
+    const entries = Object.keys(report).map(key => ({
+      plate: key,
+      ...report[key],
+    }));
+
+    const header = [
+      'Num. Placa',
+      'Tiempo estacionado (min)',
+      'Cantidad a pagar',
+    ];
+
+    return convertArrayToCSV(entries, { header });
   }
 }

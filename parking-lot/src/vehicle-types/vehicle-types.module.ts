@@ -12,5 +12,6 @@ import { VehicleType, VehicleTypeSchema } from './schemas/vehicleTypes.schema';
   ],
   controllers: [VehicleTypesController],
   providers: [VehicleTypesService],
+  exports: [VehicleTypesService],
 })
 export class VehicleTypesModule {}

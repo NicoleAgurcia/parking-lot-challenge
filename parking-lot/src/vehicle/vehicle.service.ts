@@ -21,4 +21,8 @@ export class VehicleService {
 
     return await this.vehicleModel.create({ plate, typeId });
   }
+
+  async getVehiclesByType(typeId: string) {
+    return this.vehicleModel.find({ typeId });
+  }
 }

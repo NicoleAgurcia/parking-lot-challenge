@@ -9,9 +9,10 @@ import { AuthModule } from '../auth/auth.module';
   imports: [
     MongooseModule.forFeature([{ name: Vehicle.name, schema: VehicleSchema }]),
     AuthModule,
-    HttpModule
+    HttpModule,
   ],
   controllers: [VehicleController],
   providers: [VehicleService],
+  exports: [VehicleService],
 })
 export class VehicleModule {}

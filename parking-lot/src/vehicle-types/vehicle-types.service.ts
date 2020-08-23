@@ -17,7 +17,11 @@ export class VehicleTypesService {
 
     throw new HttpException('Missing type', HttpStatus.UNPROCESSABLE_ENTITY);
   }
-  
+
+  getVehicleTypeByDescription(description: string) {
+    return this.vehicleTypeModel.findOne({ description });
+  }
+
   getVehicleTypes() {
     return this.vehicleTypeModel.find();
   }
