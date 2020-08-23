@@ -10,6 +10,11 @@ export class VehicleTypesController {
     return this.vehicleTypesService.getVehicleType(id);
   }
 
+  @Get()
+  getVehicleTypes() {
+    return this.vehicleTypesService.getVehicleTypes();
+  }
+
   @Post()
   createVehicleType(@Body() body) {
     const { description } = body;

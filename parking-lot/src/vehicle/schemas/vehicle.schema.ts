@@ -7,7 +7,7 @@ export class Vehicle extends Document {
   plate: string;
 
   @Prop({required: true})
-  typeId: number;
+  typeId: string;
 }
 
 export const VehicleSchema = SchemaFactory.createForClass(Vehicle);

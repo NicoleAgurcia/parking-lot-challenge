@@ -17,6 +17,10 @@ export class VehicleTypesService {
 
     throw new HttpException('Missing type', HttpStatus.UNPROCESSABLE_ENTITY);
   }
+  
+  getVehicleTypes() {
+    return this.vehicleTypeModel.find();
+  }
 
   async createVehicleType(description: string) {
     const vehicleType = await this.vehicleTypeModel.find({ description });

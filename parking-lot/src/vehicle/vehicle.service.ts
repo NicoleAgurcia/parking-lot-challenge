@@ -13,7 +13,7 @@ export class VehicleService {
     return this.vehicleModel.find();
   }
 
-  async createVehicle(plate: string, typeId: number) {
+  async createVehicle(plate: string, typeId: string) {
     const vehicles = await this.vehicleModel.find({ plate });
     if (vehicles.length > 0) {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
