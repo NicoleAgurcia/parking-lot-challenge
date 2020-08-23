@@ -14,4 +14,9 @@ export class EventLogController {
   registerDeparture(@Param('plate') plate) {
     return this.eventLogService.registerDeparture(plate);
   }
+
+  @Post('reset')
+  resetEventLog() {
+    return this.eventLogService.resetEventLogs();
+  }
 }

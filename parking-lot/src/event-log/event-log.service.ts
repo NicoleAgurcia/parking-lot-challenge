@@ -11,7 +11,7 @@ export class EventLogService {
 
   async registerEntry(plate: string) {
     let [register] = await this.eventLogModel
-      .find({ plate })
+      .find({ plate, active: true })
       .sort({ startDate: -1 });
 
     if (register && !register.endDate) {
@@ -32,7 +32,7 @@ export class EventLogService {
 
   async registerDeparture(plate: string) {
     let [register] = await this.eventLogModel
-      .find({ plate })
+      .find({ plate, active: true })
       .sort({ startDate: -1 });
 
     if (!register || register.endDate) {
@@ -45,5 +45,13 @@ export class EventLogService {
     register.endDate = new Date();
     await register.save();
     return register;
+  }
+
+  async resetEventLogs() {
+    const { nModified } = await this.eventLogModel.updateMany(
+      { active: true },
+      { active: false },
+    );
+    return { count: nModified };
   }
 }
