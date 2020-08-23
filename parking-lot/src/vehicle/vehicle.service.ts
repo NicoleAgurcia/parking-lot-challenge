@@ -25,4 +25,8 @@ export class VehicleService {
   async getVehiclesByType(typeId: string) {
     return this.vehicleModel.find({ typeId });
   }
+
+  async findByPlate(plate: string): Promise<Vehicle> {
+    return this.vehicleModel.findOne({ plate });
+  }
 }

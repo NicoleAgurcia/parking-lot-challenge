@@ -49,7 +49,20 @@ export class EventLogService {
 
     register.endDate = new Date();
     await register.save();
-    return register;
+
+    const vehicle = await this.vehicleService.findByPlate(plate);
+    const minutes = this.calculateMinutes(register);
+    const fee = this.calculateFee(register, 0.5);
+
+    if (!vehicle) {
+      return { plate, minutes, fee, type: 'NON RESIDENT' };
+    }
+
+    const vehicleType = await this.vehicleTypesService.getVehicleType(
+      vehicle.typeId,
+    );
+
+    return { plate, minutes, fee: 0, type: vehicleType.description };
   }
 
   async resetEventLogs() {
@@ -83,7 +96,7 @@ export class EventLogService {
       if (!prev[cur.plate]) {
         return prev;
       }
-      prev[cur.plate].fee += this.calculateFee(cur);
+      prev[cur.plate].fee += this.calculateFee(cur, 0.05);
       prev[cur.plate].minutes += this.calculateMinutes(cur);
       return prev;
     }, residentDefaultInfo);
@@ -91,16 +104,16 @@ export class EventLogService {
     return logsDictionary;
   }
 
-  calculateMinutes(cur: EventLog) {
-    const delta = cur.endDate.getTime() - cur.startDate.getTime();
-    return delta / 1000 / 60;
+  calculateMinutes(cur: EventLog): number {
+    const delta: number = cur.endDate.getTime() - cur.startDate.getTime();
+    return +(delta / 1000 / 60).toFixed(4);
   }
 
-  calculateFee(cur: EventLog) {
+  calculateFee(cur: EventLog, rate: number) {
     if (!cur.endDate) return 0;
     const mins = this.calculateMinutes(cur);
 
-    return mins * 0.05;
+    return +(mins * rate).toFixed(4);
   }
 
   csvReport(report: any) {

@@ -12,7 +12,7 @@ export class VehicleTypesService {
 
   getVehicleType(_id: string) {
     if (mongoose.Types.ObjectId.isValid(_id)) {
-      return this.vehicleTypeModel.find({ _id });
+      return this.vehicleTypeModel.findOne({ _id });
     }
 
     throw new HttpException('Missing type', HttpStatus.UNPROCESSABLE_ENTITY);
