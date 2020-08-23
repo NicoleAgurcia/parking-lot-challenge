@@ -37,4 +37,10 @@ export class VehicleTypesService {
 
     return await this.vehicleTypeModel.create({ description });
   }
+
+  createVehicleTypes(descriptions: string[]) {
+    return this.vehicleTypeModel.create(
+      descriptions.map(description => ({ description })),
+    );
+  }
 }

@@ -14,7 +14,7 @@ export class AuthGuard implements CanActivate {
 
     const { authorization } = request.headers;
     const config = { headers: { authorization } };
-    const url = 'http://localhost:3000/auth/verify';
+    const url = process.env.AUTH_URL;
 
     try {
       await this.httpService.post(url, {}, config).toPromise();

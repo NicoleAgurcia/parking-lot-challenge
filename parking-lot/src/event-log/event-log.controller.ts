@@ -1,7 +1,16 @@
-import { Controller, Post, Param, Get, Response } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Param,
+  Get,
+  Response,
+  UseGuards,
+} from '@nestjs/common';
 import { EventLogService } from './event-log.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('event-logs')
+@UseGuards(AuthGuard)
 export class EventLogController {
   constructor(private eventLogService: EventLogService) {}
 
