@@ -12,7 +12,7 @@ async function bootstrap() {
 
   await app.listen(4000);
   let vehicleTypesResult;
-  if (!types.length) {
+  if (types && !types.length) {
     vehicleTypesResult = await vehicleTypeService.createVehicleTypes([
       'Residente',
       'Oficial',
@@ -20,7 +20,7 @@ async function bootstrap() {
     console.log('Created default vehicle types', vehicleTypesResult);
   }
 
-  if (vehicleTypesResult.length && !vehicles.length) {
+  if (vehicleTypesResult && vehicleTypesResult.length && !vehicles.length) {
     await vehicleService.createVehicle('RE-2125', vehicleTypesResult[0]._id);
     await vehicleService.createVehicle('OF-2032', vehicleTypesResult[1]._id);
     console.log('Created Resident vehicle: RE-2125');

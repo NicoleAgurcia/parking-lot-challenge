@@ -10,21 +10,23 @@ import { EventLogService } from './event-log.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('event-logs')
-@UseGuards(AuthGuard)
 export class EventLogController {
   constructor(private eventLogService: EventLogService) {}
 
   @Post('entry/:plate')
+  @UseGuards(AuthGuard)
   registerEntry(@Param('plate') plate) {
     return this.eventLogService.registerEntry(plate);
   }
 
   @Post('departure/:plate')
+  @UseGuards(AuthGuard)
   registerDeparture(@Param('plate') plate) {
     return this.eventLogService.registerDeparture(plate);
   }
 
   @Post('reset')
+  @UseGuards(AuthGuard)
   resetEventLog() {
     return this.eventLogService.resetEventLogs();
   }
